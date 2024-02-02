@@ -49,28 +49,42 @@ class ControladorUsuarios {
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
         $conn = $connexionDB->getConnexion();
-
+    
         // Limpiamos los datos que vienen del usuario
         $email = htmlspecialchars($_POST['email']);
         $password = htmlspecialchars($_POST['password']);
-
+    
         // Validamos el usuario
         $usuariosDAO = new UsuariosDAO($conn);
         $usuario = $usuariosDAO->getByEmail($email);
-
+    
         if ($usuario !== null && password_verify($password, $usuario->getPassword())) {
             // Email y password correctos. Iniciamos sesión
             Sesion::iniciarSesion($usuario);
-
-            // Redirigimos a index.php
+    
+            // Creamos la cookie para que nos recuerde 1 semana
+            setcookie('sid', $usuario->getSid(), time() + 24 * 60 * 60, '/');
+    
+            // Redirigimos a la página de inicio si hay una sesión activa
+            if (Sesion::existeSesion()) {
+                header('location: index.php?accion=inicio');
+            } else {
+                // Redirigimos a index.php si no hay sesión activa
+                header('location: index.php');
+            }
+            die();
+        }
+    
+        // Email o password incorrectos, redirigir a index.php
+        guardarMensaje("Email o password incorrectos");
+    
+        // Redirigir a la página de login si no hay sesión activa
+        if (!Sesion::existeSesion()) {
             header('location: index.php');
             die();
         }
-
-        // Email o password incorrectos, redirigir a index.php
-        guardarMensaje("Email o password incorrectos");
-        header('location: index.php');
     }
+    
 
     public function logout() {
         Sesion::cerrarSesion();

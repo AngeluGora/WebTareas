@@ -45,44 +45,59 @@ class ControladorUsuarios {
         require 'app/vistas/registrar.php';
     } // Fin de la función registrar()
 
+    public function irALogin() {
+        // Verificar si ya hay una sesión activa
+        if (Sesion::existeSesion()) {
+            // Si hay una sesión activa, redirige a la página de inicio
+            header('location: index.php?accion=inicio');
+            die();
+        }
+
+        // Si no hay una sesión activa, muestra la vista del formulario de login
+        include('app/vistas/login.php');  
+    }
+
     public function login() {
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
         $conn = $connexionDB->getConnexion();
     
-        // Limpiamos los datos que vienen del usuario
-        $email = htmlspecialchars($_POST['email']);
-        $password = htmlspecialchars($_POST['password']);
+        // Verificar si se han enviado datos por POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Limpiamos los datos que vienen del usuario
+            $email = isset($_POST['email']) ? htmlspecialchars($_POST['email']) : null;
+            $password = isset($_POST['password']) ? htmlspecialchars($_POST['password']) : null;
     
-        // Validamos el usuario
-        $usuariosDAO = new UsuariosDAO($conn);
-        $usuario = $usuariosDAO->getByEmail($email);
+            // Validamos el usuario
+            if ($email && $password) {
+                $usuariosDAO = new UsuariosDAO($conn);
+                $usuario = $usuariosDAO->getByEmail($email);
     
-        if ($usuario !== null && password_verify($password, $usuario->getPassword())) {
-            // Email y password correctos. Iniciamos sesión
-            Sesion::iniciarSesion($usuario);
+                if ($usuario !== null && password_verify($password, $usuario->getPassword())) {
+                    // Email y password correctos. Iniciamos sesión
+                    Sesion::iniciarSesion($usuario);
     
-            // Creamos la cookie para que nos recuerde 1 semana
-            setcookie('sid', $usuario->getSid(), time() + 24 * 60 * 60, '/');
+                    // Creamos la cookie para que nos recuerde 1 semana
+                    setcookie('sid', $usuario->getSid(), time() + 24 * 60 * 60, '/');
     
-            // Redirigimos a la página de inicio si hay una sesión activa
-            if (Sesion::existeSesion()) {
-                header('location: index.php?accion=inicio');
+                    // Redirigimos a la página de inicio si hay una sesión activa
+                    if (Sesion::existeSesion()) {
+                        header('location: index.php?accion=inicio');
+                        die();
+                    }
+                } else {
+                    // Email o password incorrectos, mostrar mensaje de error en la página de login
+                    $_SESSION['mensaje_error'] = "Email o password incorrectos";
+                }
             } else {
-                // Redirigimos a index.php si no hay sesión activa
-                header('location: index.php');
+                // Datos de POST incompletos, mostrar mensaje de error en la página de login
+                $_SESSION['mensaje_error'] = "Por favor, ingrese tanto el email como la contraseña.";
             }
-            die();
         }
     
-        // Email o password incorrectos, redirigir a index.php
-        guardarMensaje("Email o password incorrectos");
-    
-        // Redirigir a la página de login si no hay sesión activa
-        if (!Sesion::existeSesion()) {
-            header('location: index.php');
-            die();
-        }
+        // Redirigir a la página de login en cualquier caso
+        header('location: index.php');
+        die();
     }
     
 

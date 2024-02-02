@@ -1,7 +1,7 @@
 <?php 
 require_once 'app/config/config.php';
 
-class ControladorTareas {
+class ControladorTick {
     function marcarComoCompletada(){
         // Crea la conexión utilizando la clase que has creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);

@@ -1,7 +1,7 @@
 <?php 
 
 require_once 'app/config/config.php';
-require_once 'app/modelos/ConnexionDB.php';
+require_once 'app/modelos/ConexionDB.php';
 require_once 'app/modelos/Tarea.php';
 require_once 'app/modelos/TareasDAO.php';
 require_once 'app/modelos/Usuario.php';
@@ -31,6 +31,9 @@ $mapa = array(
     'editarTarea'=>array('controlador'=>'ControladorTareas',
                             'metodo'=>'editar', 
                             'privada'=>true),
+    'irALogin'=>array('controlador'=>'ControladorUsuarios', 
+                    'metodo'=>'irALogin', 
+                    'privada'=>false),
     'login'=>array('controlador'=>'ControladorUsuarios', 
                     'metodo'=>'login', 
                     'privada'=>false),
@@ -63,15 +66,14 @@ if (isset($_GET['accion'])) {
         echo 'Página no encontrada';
         die();
     }
-} else {
-    if (Sesion::existeSesion()) {
+} else if (Sesion::existeSesion()) {
         // Si hay una sesión activa, redirige a la página de inicio
         $accion = 'inicio';
     } else {
         // Si no hay una sesión activa, redirige a la página de login
-        $accion = 'login';
+        $accion = 'irALogin';
     }
-}
+
 
 //Si existe la cookie y no ha iniciado sesión, le iniciamos sesión de forma automática
 //if( !isset($_SESSION['email']) && isset($_COOKIE['sid'])){

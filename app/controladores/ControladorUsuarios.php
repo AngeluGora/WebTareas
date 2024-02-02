@@ -79,7 +79,7 @@ class ControladorUsuarios {
     
                     // Redirigimos a la página de inicio si hay una sesión activa
                     if (Sesion::existeSesion()) {
-                        header('location: index.php?accion=inicio');
+                        header('location: index.php?accion=inicio&idUsuario={$usuario->getId()}');
                         die();
                     }
                 } else {

@@ -11,8 +11,8 @@ class TareasDAO {
         }
     }
 
-    public function obtenerTodasLasTareas() {
-        $query = "SELECT * FROM tareas";
+    public function obtenerLasTareasUsuario($idUsuario) {
+        $query = "SELECT * FROM tareas where idUsuario = $idUsuario";
         $resultados = $this->conexion->query($query);
         $tareas = array();
 
@@ -38,7 +38,7 @@ class TareasDAO {
         }
     }
 
-    public function obtenerTareaPorID($id) {
+    public function obtenerTareaPorId($id) {
         $query = "SELECT * FROM tareas WHERE id = $id";
         $resultado = $this->conexion->query($query);
 

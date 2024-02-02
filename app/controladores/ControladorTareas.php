@@ -19,8 +19,14 @@ class ControladorTareas{
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
 
+        if (Sesion::existeSesion()) {
+            $idUsuario = Sesion::getUsuario()->getId();
+        } else if (isset($_GET['idUsuario'])) {
+            $idUsuario = intval($_GET['idUsuario']);
+        }
+        
         $tareasDAO = new TareasDAO($conn);
-        $tareas = $tareasDAO->obtenerTodasLasTareas();
+        $tareas = $tareasDAO->obtenerLasTareasUsuario($idUsuario);
         require 'app/vistas/inicio.php';
     }
 

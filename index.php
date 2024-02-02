@@ -67,8 +67,13 @@ if (isset($_GET['accion'])) {
         die();
     }
 } else if (Sesion::existeSesion()) {
-        // Si hay una sesión activa, redirige a la página de inicio
-        $accion = 'inicio';
+    if (!$idUsuario) {
+        // Obtener el ID del usuario desde la sesión y redirigir a index.php con el ID
+        $idUsuario = Sesion::getUsuario()->getId();
+        header("location: index.php?accion=inicio&idUsuario=$idUsuario");
+        die();
+    }
+
     } else {
         // Si no hay una sesión activa, redirige a la página de login
         $accion = 'irALogin';

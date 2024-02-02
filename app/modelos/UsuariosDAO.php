@@ -76,18 +76,17 @@ class UsuariosDAO {
      * Inserta en la base de datos el usuario que recibe como parámetro
      * @return idUsuario Devuelve el id autonumérico que se le ha asignado al usuario o false en caso de error
      */
-    function insert(Usuario $usuario): int|bool{
+    function insert(Usuario $usuario): int|bool {
         if(!$stmt = $this->conn->prepare("INSERT INTO usuarios (email, password, nombre) VALUES (?,?,?)")){
             die("Error al preparar la consulta insert: " . $this->conn->error );
         }
         $email = $usuario->getEmail();
-        $password = $usuario->getPassword();
-        $foto = $usuario->getNombre();
-        $stmt->bind_param('sss',$email, $password, $nombre);
+        $password = password_hash($usuario->getPassword(), PASSWORD_DEFAULT);
+        $nombre = $usuario->getNombre();
+        $stmt->bind_param('sss', $email, $password, $nombre);
         if($stmt->execute()){
             return $stmt->insert_id;
-        }
-        else{
+        } else {
             return false;
         }
     }

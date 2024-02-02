@@ -52,7 +52,6 @@ class ControladorUsuarios {
             die();
         }
 
-        // Si no hay una sesión activa, muestra la vista del formulario de login
         include('app/vistas/login.php');  
     }
 

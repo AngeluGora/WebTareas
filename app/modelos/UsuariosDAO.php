@@ -81,7 +81,7 @@ class UsuariosDAO {
             die("Error al preparar la consulta insert: " . $this->conn->error );
         }
         $email = $usuario->getEmail();
-        $password = password_hash($usuario->getPassword(), PASSWORD_DEFAULT);
+        $password = $usuario->getPassword();
         $nombre = $usuario->getNombre();
         $stmt->bind_param('sss', $email, $password, $nombre);
         if($stmt->execute()){

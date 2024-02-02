@@ -30,7 +30,6 @@
 
                 <input type="submit" value="Iniciar sesión">
             </form>
-
             <p>No tienes una cuenta aún? <a href="index.php?accion=registrar">Regístrate</a></p>
 
             <?php

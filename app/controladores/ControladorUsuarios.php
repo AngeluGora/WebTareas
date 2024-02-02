@@ -28,9 +28,8 @@ class ControladorUsuarios {
                 // Insertamos en la BD
                 $usuario = new Usuario();
                 $usuario->setEmail($email);
-                // Encriptamos el password
-                $passwordCifrado = password_hash($password, PASSWORD_DEFAULT);
-                $usuario->setPassword($passwordCifrado);
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                $usuario->setPassword($hashed_password);
                 $usuario->setNombre($nombre);
 
                 if ($usuariosDAO->insert($usuario)) {
@@ -43,7 +42,7 @@ class ControladorUsuarios {
         } // Fin del if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
         require 'app/vistas/registrar.php';
-    } // Fin de la función registrar()
+    } 
 
     public function irALogin() {
         // Verificar si ya hay una sesión activa
@@ -65,14 +64,13 @@ class ControladorUsuarios {
         // Verificar si se han enviado datos por POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Limpiamos los datos que vienen del usuario
-            $email = isset($_POST['email']) ? htmlspecialchars($_POST['email']) : null;
-            $password = isset($_POST['password']) ? htmlspecialchars($_POST['password']) : null;
+            $email = htmlspecialchars($_POST['email']);
+            $password =htmlspecialchars($_POST['password']);
     
             // Validamos el usuario
             if ($email && $password) {
                 $usuariosDAO = new UsuariosDAO($conn);
                 $usuario = $usuariosDAO->getByEmail($email);
-    
                 if ($usuario !== null && password_verify($password, $usuario->getPassword())) {
                     // Email y password correctos. Iniciamos sesión
                     Sesion::iniciarSesion($usuario);

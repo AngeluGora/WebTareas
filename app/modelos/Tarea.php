@@ -64,8 +64,7 @@ class Tarea{
     /**
      * Get the value of idUsuario
      */
-    public function getIdUsuario()
-    {
+    public function getIdUsuario() {
         return $this->idUsuario;
     }
 

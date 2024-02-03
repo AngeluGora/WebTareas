@@ -4,7 +4,7 @@ class TareasDAO {
     private $conexion;
 
     public function __construct() {
-        $this->conexion = new mysqli("localhost", "root", "", "tareas");
+        $this->conexion = new mysqli(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB);
 
         if ($this->conexion->connect_error) {
             die("Error de conexión: " . $this->conexion->connect_error);
@@ -12,18 +12,33 @@ class TareasDAO {
     }
 
     public function obtenerLasTareasUsuario($idUsuario) {
-        $query = "SELECT * FROM tareas where idUsuario = $idUsuario";
-        $resultados = $this->conexion->query($query);
-        $tareas = array();
+        $query = "SELECT * FROM tareas WHERE idUsuario = ?";
+        $stmt = $this->conexion->prepare($query);
 
-        if ($resultados->num_rows > 0) {
-            while ($tarea = $resultados->fetch_object(Tarea::class)) {
-                $tareas[] = $tarea;
-            }
+        if (!$stmt) {
+            die("Error al preparar la consulta: " . $this->conexion->error);
         }
 
-        return $tareas;
+        $stmt->bind_param("i", $idUsuario);
+
+        if (!$stmt->execute()) {
+            die("Error al ejecutar la consulta: " . $stmt->error);
+        }
+
+        $resultados = $stmt->get_result();
+        $tareasUsuario = array();
+
+        while ($tarea = $resultados->fetch_object(Tarea::class)) {
+            $tareasUsuario[] = $tarea;
+        }
+
+        $stmt->close();
+        return $tareasUsuario;
+
     }
+    
+    
+    
 
     public function insertarTarea($texto) {
         $texto = $this->conexion->real_escape_string($texto);

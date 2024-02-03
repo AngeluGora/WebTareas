@@ -67,17 +67,17 @@ if (isset($_GET['accion'])) {
         die();
     }
 } else if (Sesion::existeSesion()) {
-    if (!$idUsuario) {
-        // Obtener el ID del usuario desde la sesión y redirigir a index.php con el ID
-        $idUsuario = Sesion::getUsuario()->getId();
-        header("location: index.php?accion=inicio&idUsuario=$idUsuario");
-        die();
-    }
+    // Obtener el ID del usuario desde la sesión
+    $idUsuario = Sesion::getUsuario()->getId();
+    
+    // Redirigir a la página de inicio con el ID de usuario
+    header("location: index.php?accion=inicio&idUsuario=$idUsuario");
+    die();
+} else {
+    // Si no hay una sesión activa, redirige a la página de login
+    $accion = 'irALogin';
+}
 
-    } else {
-        // Si no hay una sesión activa, redirige a la página de login
-        $accion = 'irALogin';
-    }
 
 
 //Si existe la cookie y no ha iniciado sesión, le iniciamos sesión de forma automática

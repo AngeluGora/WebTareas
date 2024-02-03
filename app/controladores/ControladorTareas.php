@@ -14,21 +14,32 @@ class ControladorTareas{
         require 'app/vistas/ver_tarea.php';
     }
 
-    public function inicio(){
-
-        $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
+    public function inicio() {
+        $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
         $conn = $connexionDB->getConnexion();
-
-        if (Sesion::existeSesion()) {
+    
+        // Verificar si se proporcionó el idUsuario en la URL
+        if (isset($_GET['idUsuario'])) {
+            $idUsuario = $_GET['idUsuario'];
+            // Asegurarse de que $idUsuario sea un entero antes de usarlo
+            if (!is_numeric($idUsuario)) {
+                // Manejar el caso en el que idUsuario no es un número (puedes redirigir o manejarlo según tu lógica)
+                echo 'El idUsuario no es un número válido.';
+                die();
+            }
+        } elseif (Sesion::existeSesion()) {
+            // Si no se proporciona, pero hay una sesión activa, obtener el idUsuario de la sesión
             $idUsuario = Sesion::getUsuario()->getId();
-        } else if (isset($_GET['idUsuario'])) {
-            $idUsuario = intval($_GET['idUsuario']);
+        } else {
+            $idUsuario = 0;
         }
-        
+    
         $tareasDAO = new TareasDAO($conn);
         $tareas = $tareasDAO->obtenerLasTareasUsuario($idUsuario);
+
         require 'app/vistas/inicio.php';
     }
+    
 
     public function borrar(){
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);

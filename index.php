@@ -27,7 +27,7 @@ $mapa = array(
                             'privada'=>false),
     'borrarTarea'=>array('controlador'=>'ControladorTareas',
                             'metodo'=>'borrar', 
-                            'privada'=>true),
+                            'privada'=>false),
     'editarTarea'=>array('controlador'=>'ControladorTareas',
                             'metodo'=>'editar', 
                             'privada'=>true),

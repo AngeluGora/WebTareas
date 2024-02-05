@@ -61,29 +61,43 @@ papeleras.forEach(papelera => {
 });
 
     
-function manejadorBorrar(){
-    //this referencia al elementos del DOM sobre el que hemos hecho click
-    let idTarea = this.getAttribute('data-idTarea');
-    //Mostramos preloader
-    let preloader = this.parentElement.querySelector('img');
-    preloader.style.visibility="visible";
-    this.style.visibility='hidden';
-    //Llamamos al script del servidor que borra la tarea pasándole el idTarea como parámetro
-    fetch('borrar.php?id='+idTarea)
-    .then(datos => datos.json())
-    .then(respuesta =>{
-        if(respuesta.respuesta=='ok'){
-            this.parentElement.remove();
-        }
-        else{
-            alert("No se ha encontrado la tarea en el servidor");
-            this.style.visibility='visible';
-        }
-    })
-    .finally(function(){
-        //Ocultamos preloader
-        preloader.style.visibility="hidden";
-        this.style.visibility='visible';
-    });
+function manejadorBorrar() {
+    // Guardar el contexto actual
+    const self = this;
+
+    // Obtener el idTarea
+    const idTarea = self.getAttribute('data-idTarea');
+
+    // Crear FormData y opciones para la solicitud fetch
+    const datos2 = new FormData();
+    datos2.append('idTarea', idTarea);
+
+    const options2 = {
+        method: "POST",
+        body: datos2
+    }
+
+    // Mostrar preloader
+    let preloader = self.parentElement.querySelector('img');
+    preloader.style.visibility = "visible";
+    self.style.visibility = 'hidden';
+
+    // Llamada al script del servidor que borra la tarea pasándole el idTarea como parámetro
+    fetch('index.php?accion=borrarTarea', options2)
+        .then(datos => datos.json())
+        .then(respuesta => {
+            if (respuesta.respuesta == 'ok') {
+                self.parentElement.remove();
+            } else {
+                alert("No se ha encontrado la tarea en el servidor");
+                self.style.visibility = 'visible';
+            }
+        })
+        .finally(function () {
+            // Ocultar preloader
+            preloader.style.visibility = "hidden";
+            self.style.visibility = 'visible';
+        });
 }
+
 

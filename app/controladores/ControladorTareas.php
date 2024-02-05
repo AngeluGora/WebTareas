@@ -46,7 +46,9 @@ class ControladorTareas{
 
         $tareasDAO = new TareasDAO($conn);
 
-        $idTarea = htmlspecialchars($_GET['id']);
+        $idTarea = htmlspecialchars($_POST['idTarea']);
+        var_dump($_POST);
+        die;
         $tarea = $tareasDAO->obtenerTareaPorID($idTarea);
 
 

@@ -1,5 +1,4 @@
 <?php
-require_once 'app/config/config.php';
 
 class ControladorUsuarios {
     public function registrar() {
@@ -78,11 +77,11 @@ class ControladorUsuarios {
                     setcookie('sid', $usuario->getSid(), time() + 24 * 60 * 60, '/');
     
                     // Redirigimos a la página de inicio si hay una sesión activa
-                    if (Sesion::existeSesion()) {
+                    // if (Sesion::existeSesion()) {
                         header("location: index.php?accion=inicio&idUsuario={$usuario->getId()}");
 
                         die();
-                    }
+                    //}
                 } else {
                     // Email o password incorrectos, mostrar mensaje de error en la página de login
                     $_SESSION['mensaje_error'] = "Email o password incorrectos";

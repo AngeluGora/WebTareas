@@ -1,5 +1,4 @@
-<?php 
-require_once 'app/config/config.php';
+<?php
 
 class ControladorTick {
     function marcarComoCompletada(){

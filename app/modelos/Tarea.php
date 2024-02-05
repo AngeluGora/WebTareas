@@ -77,4 +77,13 @@ class Tarea{
 
         return $this;
     }
+
+    public function toArray() {
+        return [
+            'id' => $this->getId(),
+            'fecha' => $this->getFecha(),
+            'texto' => $this->getTexto(),
+            'idusuario' => $this->getIdUsuario()
+        ];
+    }
 }

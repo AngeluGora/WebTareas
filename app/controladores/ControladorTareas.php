@@ -1,5 +1,4 @@
-<?php 
-require_once 'app/config/config.php';
+<?php
 
 class ControladorTareas{
     public function ver(){
@@ -101,7 +100,6 @@ class ControladorTareas{
     }
 
     public function insertar(){
-        
         $error ='';
 
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
@@ -110,10 +108,7 @@ class ControladorTareas{
         $usuariosDAO = new UsuariosDAO($conn);
         $usuarios = $usuariosDAO->getAll();
 
-
         if($_SERVER['REQUEST_METHOD']=='POST'){
-
-            $fecha = htmlspecialchars($_POST['fecha']);
             $texto =  htmlspecialchars($_POST['texto']);
 
             if(empty($texto)){
@@ -122,17 +117,12 @@ class ControladorTareas{
             else{
                 $tareasDAO = new TareasDAO($conn);
                 $tarea = new Tarea();
-                $tarea->setFecha($fecha);
                 $tarea->setTexto($texto);
                 $tarea->setIdUsuario(Sesion::getUsuario()->getId());
-                $tareasDAO->insertarTarea($tarea);
-                header('location: index.php');
-                die();
+                $tarea=$tareasDAO->insertar($tarea);
+                print json_encode($tarea);
             }
-
-
         }
-        require 'app/vistas/insertar_tarea.php';
     }
 
     function addImageTarea(){

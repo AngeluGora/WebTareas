@@ -40,12 +40,9 @@
     <?php endforeach; ?>
 </div>
 
-<input type="text" id="nuevaTarea">
-<button id="botonNuevaTarea">Enviar</button><img src="preloader.gif" id="preloaderInsertar">
+    <input type="text" id="nuevaTarea">
+    <button id="botonNuevaTarea">Enviar</button><img src="preloader.gif" id="preloaderInsertar">
+    <script src="app/controladores/script.js" type="text/javascript"></script>
 
-
-    <?php if(Sesion::getUsuario()): ?>
-        <a href="index.php?accion=insertarTarea" class="nuevaTarea">Nueva Tarea</a>
-    <?php endif; ?>
 </body>
 </html>

@@ -37,8 +37,22 @@ class TareasDAO {
 
     }
     
-    
-    
+    public function insertar($tarea){
+        if(!$stmt = $this->conexion->prepare("INSERT INTO tareas (texto, idUsuario) VALUES (?,?)")){
+            die("Error al preparar la consulta insert: " . $this->conn->error );
+        }
+
+        $texto = $tarea->getTexto();
+        $idUsuario = $tarea->getIdUsuario();
+        $stmt->bind_param('si', $texto, $idUsuario);
+        if($stmt->execute()){
+            $idtarea = $stmt->insert_id;
+            return $this->obtenerTareaPorId($idtarea);
+        } else {
+            return false;
+        }
+    }
+
 
     public function insertarTarea($texto) {
         $texto = $this->conexion->real_escape_string($texto);
@@ -60,7 +74,7 @@ class TareasDAO {
         if ($resultado->num_rows > 0) {
             $tarea = $resultado->fetch_object(Tarea::class);
             
-            return $tarea;
+            return $tarea->toArray();
         } else {
             return null;
         }

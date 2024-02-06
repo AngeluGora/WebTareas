@@ -98,14 +98,12 @@ class TareasDAO {
     }
 
     function update($tarea){
-        if(!$stmt = $this->conn->prepare("UPDATE tareas SET fecha=?, texto=?, idUsuario=? WHERE id=?")){
-            die("Error al preparar la consulta update: " . $this->conn->error );
+        if(!$stmt = $this->conexion->prepare("UPDATE tareas SET texto=? WHERE id=?")){
+            die("Error al preparar la consulta update: " . $this->conexion->error );
         }
-        $fecha = $tarea->getFecha();
         $texto = $tarea->getTexto();
-        $idUsuario = $tarea->getIdUsuario();
         $id = $tarea->getId();
-        $stmt->bind_param('dsii',$fecha, $texto, $idUsuario,$id);
+        $stmt->bind_param('si', $texto,$id);
         return $stmt->execute();
     }
 }

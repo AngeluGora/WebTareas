@@ -63,6 +63,12 @@ class ControladorTareas{
         $conn = $connexionDB->getConnexion();
         $tareasDAO = new TareasDAO($conn);
         $tarea = $tareasDAO->obtenerTareaPorID($idTarea);
+        $fotosDAO= new FotosDAO($conn);
+        if($fotosDAO->getAllByIdTarea($idTarea)){
+            $fotos =  $fotosDAO->getAllByIdTarea($idTarea);
+        }else{
+            $fotos=false;
+        }
         include('app/vistas/editarTarea.php');  
     }
 
@@ -71,8 +77,7 @@ class ControladorTareas{
 
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
-        
-        $idTarea = htmlspecialchars($_GET['idTarea']);
+        $idTarea = htmlspecialchars($_POST['idTarea']);
         $tareasDAO = new TareasDAO($conn);
         $tarea = $tareasDAO->obtenerTareaPorID($idTarea);
 
@@ -91,7 +96,6 @@ class ControladorTareas{
             else{
                 $tarea->setFecha($fecha);
                 $tarea->setTexto($texto);
-                $tarea->setIdUsuario($idUsuario);
 
                 $tareasDAO->update($tarea);
                 header('location: index.php');
@@ -136,8 +140,8 @@ class ControladorTareas{
         $informacionPath = pathinfo($nombreArchivo);
         $extension = $informacionPath['extension'];
         $nombreArchivo = md5(time()+rand()) . '.' . $extension;
-        move_uploaded_file($_FILES['foto']['tmp_name'],"web/images/$nombreArchivo");
-
+        move_uploaded_file($_FILES['foto']['tmp_name'],"web/imagenes/$nombreArchivo");
+        
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
         $fotosDAO = new FotosDAO($conn);

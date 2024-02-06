@@ -4,12 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Tarea</title>
+    <style>
+        img{
+            height: 100px; 
+            border: 1px solid black;
+        }
+    </style>
 </head>
 <body>
     <h1>EDITAR</h1>
     <form action="index.php?accion=editarTarea&id=<?= $idTarea ?>" method="post" data-idTarea="<?=$idTarea?>" id="formularioEditar">
         
-        <input type="text" name="id" value="<?=$tarea->getId()?>" readonly>
+        <input type="text" name="idTarea" value="<?=$tarea->getId()?>" readonly>
         <label for="fecha">Fecha:</label>
         <input type="text" name="fecha" value="<?=$tarea->getFecha()?>" readonly><br>
         <label for="texto">Texto:</label>
@@ -18,9 +24,11 @@
         <input type="text" name="idUsuario" value="<?=$tarea->getIdUsuario()?>" readonly><br> 
 
         <div id="fotos">
-            <?php foreach($fotos as $foto): ?>
-                <img src="web/imagenes/<?=$foto->getNombreArchivo()?>" style="height: 100px; border: 1px solid black";>                
-            <?php endforeach; ?>
+            <div id="fotos2">
+                <?php if($fotos!=false){ foreach($fotos as $foto): ?>
+                    <img src="web/imagenes/<?=$foto->getNombreArchivo()?>" style="height: 100px; border: 1px solid black";>                
+                <?php endforeach; }?>
+            </div>
             <div id="addImage">+</div>
             <input type="file" style="display: none;" id="inputFileImage">
         </div>
@@ -41,14 +49,16 @@
         inputFileImage.addEventListener('change',function(){
             let formData = new FormData();
             formData.append('foto',inputFileImage.files[0]);
-
             fetch('index.php?accion=addImageTarea&idTarea='+idTarea,{
                 method: 'POST',
                 body: formData
             })
             .then(datos => datos.json())
             .then(respuesta => {
-                console.log(respuesta);
+                let nuevaFoto = document.createElement("img");
+                nuevaFoto.classList.add('imagenMensaje');
+                nuevaFoto.setAttribute("src",'web/imagenes/'+respuesta.nombreArchivo);
+                document.getElementById('fotos2').append(nuevaFoto);
             })
         });
     </script>

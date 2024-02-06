@@ -52,7 +52,7 @@ $mapa = array(
     'desmarcarComoCompletada'=>array('controlador'=>'ControladorTick', 
                         'metodo'=>'desmarcarComoCompletada', 
                         'privada'=>false),
-    'addImageTarea'=>array('controlador'=>'ControladorMensajes', 
+    'addImageTarea'=>array('controlador'=>'ControladorTareas', 
                         'metodo'=>'addImageTarea', 
                         'privada'=>false),
 );

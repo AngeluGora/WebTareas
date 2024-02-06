@@ -24,23 +24,22 @@
             <?php if(Sesion::getUsuario() && Sesion::getUsuario()->getId() == $tarea->getIdUsuario()): ?>
             
                 <div class="texto"><?= $tarea->getTexto() ?></div>
+                <?php if(Sesion::existeSesion()): ?>
+                    <?php if($existeTick): ?>
+                        <i class="fa-solid fa-heart iconoFavoritoOn" data-idTarea="<?= $tarea->getId()?>"></i>
+                    <?php else: ?>
+                        <i class="fa-regular fa-heart iconoFavoritoOff" data-idTarea="<?= $tarea->getId()?>"></i>
+                    <?php endif; ?>
+                <?php endif; ?>
                 <i class="fa-solid fa-trash papelera" data-idTarea="<?= $tarea->getId()?>"></i>
-                <img src="preloader.gif" class="preloaderBorrar">
-
                 <span class="icono_editar"><a href="index.php?accion=irAEditarTarea&idTarea=<?=$tarea->getId()?>"><i class="fa-solid fa-pen-to-square color_gris"></i></a></span>
             <div id="fotos">
                 <?php foreach($fotos as $foto): ?>
-                    <img src="web/images/<?=$foto->getNombreArchivo()?>" style="height: 100px; border: 1px solid black;">                
+                    <img src="web/imagenes/<?=$foto->getNombreArchivo()?>" style="height: 100px; border: 1px solid black;">                
                 <?php endforeach; ?>
             </div>
             <?php endif; ?>
-            <?php if(Sesion::existeSesion()): ?>
-                <?php if($existeTick): ?>
-                    <i class="fa-solid fa-heart iconoFavoritoOn" data-idTarea="<?= $tarea->getId()?>"></i>
-                <?php else: ?>
-                    <i class="fa-regular fa-heart iconoFavoritoOff" data-idTarea="<?= $tarea->getId()?>"></i>
-                <?php endif; ?>
-            <?php endif; ?>
+            
         </div>
     <?php endforeach; ?>
 </div>

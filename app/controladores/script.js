@@ -1,8 +1,6 @@
 let botonInsertar = document.getElementById('botonNuevaTarea');
 
 botonInsertar.addEventListener('click', function () {
-    // Muestro el preloader
-    document.getElementById('preloaderInsertar').style.visibility = 'visible';
 
     // Obtengo el valor del input nuevaTarea
     const nuevaTarea = document.getElementById('nuevaTarea').value;
@@ -24,7 +22,6 @@ botonInsertar.addEventListener('click', function () {
         var capaTarea = document.createElement('div');
         var capaTexto = document.createElement('div');
         var papelera = document.createElement('i');
-        var preloader = document.createElement('img');
         var enlaceEditar = document.createElement('a'); // Crear un elemento 'a' para el enlace de edición
         var iconoEditar = document.createElement('i'); // Crear un elemento 'i' para el ícono de edición
         capaTarea.classList.add('tarea');
@@ -32,8 +29,6 @@ botonInsertar.addEventListener('click', function () {
         capaTexto.innerHTML = tarea.texto;
         papelera.classList.add('fa-solid', 'fa-trash', 'papelera');
         papelera.setAttribute("data-idTarea", tarea.id);
-        preloader.setAttribute('src', 'preloader.gif');
-        preloader.classList.add('preloaderBorrar');
         enlaceEditar.setAttribute('href', 'index.php?accion=irAEditarTarea&idTarea=' + tarea.id); // Establecer el atributo 'href' del enlace
         enlaceEditar.classList.add('icono_editar'); // Agregar clase al enlace
         iconoEditar.classList.add('fa-solid', 'fa-pen-to-square', 'color_gris'); // Agregar clases al ícono de edición
@@ -41,7 +36,6 @@ botonInsertar.addEventListener('click', function () {
         enlaceEditar.appendChild(iconoEditar); // Agregar el ícono de edición al enlace
         capaTarea.appendChild(capaTexto);
         capaTarea.appendChild(papelera);
-        capaTarea.appendChild(preloader);
         capaTarea.appendChild(enlaceEditar); // Agregar el enlace de edición al DOM
         document.getElementById('tareas').appendChild(capaTarea);
     
@@ -49,8 +43,6 @@ botonInsertar.addEventListener('click', function () {
         papelera.addEventListener('click', manejadorBorrar);
     })
     .finally(function(){
-        //Ocultamos el preloader
-        document.getElementById('preloaderInsertar').style.visibility = 'hidden';
     });
     
 });
@@ -78,10 +70,7 @@ function manejadorBorrar() {
         body: datos2
     }
 
-    // Mostrar preloader
-    let preloader = self.parentElement.querySelector('img');
-    preloader.style.visibility = "visible";
-    self.style.visibility = 'hidden';
+    
     // Llamada al script del servidor que borra la tarea pasándole el idTarea como parámetro
     fetch('index.php?accion=borrarTarea', options2)
         .then(datos => datos.json())
@@ -94,9 +83,6 @@ function manejadorBorrar() {
             }
         })
         .finally(function () {
-            // Ocultar preloader
-            preloader.style.visibility = "hidden";
-            self.style.visibility = 'visible';
         });
 }
 

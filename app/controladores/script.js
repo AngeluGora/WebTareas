@@ -20,36 +20,37 @@ botonInsertar.addEventListener('click', function () {
     .then(respuesta => { 
         return respuesta.json();
     }).then(tarea => {
-        //console.log(tarea);
-        //Añado la la tarea al div "tareas" modificando el DOM
+        // Crear elementos HTML para representar la nueva tarea, incluyendo el texto de la tarea y un ícono de papelera para borrar la tarea
         var capaTarea = document.createElement('div');
         var capaTexto = document.createElement('div');
         var papelera = document.createElement('i');
         var preloader = document.createElement('img');
+        var enlaceEditar = document.createElement('a'); // Crear un elemento 'a' para el enlace de edición
+        var iconoEditar = document.createElement('i'); // Crear un elemento 'i' para el ícono de edición
         capaTarea.classList.add('tarea');
         capaTexto.classList.add('texto');
-        capaTexto.innerHTML=tarea.texto;
+        capaTexto.innerHTML = tarea.texto;
         papelera.classList.add('fa-solid', 'fa-trash', 'papelera');
-        papelera.setAttribute("data-idTarea",tarea.id);
-        preloader.setAttribute('src','preloader.gif');
+        papelera.setAttribute("data-idTarea", tarea.id);
+        preloader.setAttribute('src', 'preloader.gif');
         preloader.classList.add('preloaderBorrar');
+        enlaceEditar.setAttribute('href', 'index.php?accion=irAEditarTarea&idTarea=' + tarea.id); // Establecer el atributo 'href' del enlace
+        enlaceEditar.classList.add('icono_editar'); // Agregar clase al enlace
+        iconoEditar.classList.add('fa-solid', 'fa-pen-to-square', 'color_gris'); // Agregar clases al ícono de edición
+        iconoEditar.setAttribute('data-idTarea', tarea.id);
+        enlaceEditar.appendChild(iconoEditar); // Agregar el ícono de edición al enlace
         capaTarea.appendChild(capaTexto);
         capaTarea.appendChild(papelera);
         capaTarea.appendChild(preloader);
+        capaTarea.appendChild(enlaceEditar); // Agregar el enlace de edición al DOM
         document.getElementById('tareas').appendChild(capaTarea);
-
+    
         //Añadir manejador de evento Borrar a la nueva papelera
-        papelera.addEventListener('click',manejadorBorrar);
-
-        //También se podría hacer así:
-        //document.getElementById('tareas').innerHTML+='<div class="tarea"><div class="texto">'+tarea.texto+'</div><i class="fa-solid fa-trash papelera" data-idTarea="'+tarea.id+'"></i></div>';
-
-        //Borro el contenido del input
-        document.getElementById('nuevaTarea').value='';
+        papelera.addEventListener('click', manejadorBorrar);
     })
     .finally(function(){
         //Ocultamos el preloader
-        document.getElementById('preloaderInsertar').style.visibility='hidden';
+        document.getElementById('preloaderInsertar').style.visibility = 'hidden';
     });
     
 });

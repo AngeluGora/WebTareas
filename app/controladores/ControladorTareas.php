@@ -57,14 +57,22 @@ class ControladorTareas{
 
     }
 
+    public function irAEditar(){
+        $idTarea = $_GET['idTarea'];
+        $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
+        $conn = $connexionDB->getConnexion();
+        $tareasDAO = new TareasDAO($conn);
+        $tarea = $tareasDAO->obtenerTareaPorID($idTarea);
+        include('app/vistas/editarTarea.php');  
+    }
 
     public function editar(){
         $error ='';
 
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
-
-        $idTarea = htmlspecialchars($_GET['id']);
+        
+        $idTarea = htmlspecialchars($_GET['idTarea']);
         $tareasDAO = new TareasDAO($conn);
         $tarea = $tareasDAO->obtenerTareaPorID($idTarea);
 
@@ -92,7 +100,7 @@ class ControladorTareas{
 
         }
         
-            require 'app/vistas/editar_tarea.php';
+            require 'app/vistas/editarTarea.php';
     }
 
     public function insertar(){
@@ -116,7 +124,8 @@ class ControladorTareas{
                 $tarea->setTexto($texto);
                 $tarea->setIdUsuario(Sesion::getUsuario()->getId());
                 $tarea=$tareasDAO->insertar($tarea);
-                print json_encode($tarea);
+                $tareaArray=$tarea->toArray();
+                print json_encode($tareaArray);
             }
         }
     }

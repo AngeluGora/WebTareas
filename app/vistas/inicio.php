@@ -27,7 +27,7 @@
                 <i class="fa-solid fa-trash papelera" data-idTarea="<?= $tarea->getId()?>"></i>
                 <img src="preloader.gif" class="preloaderBorrar">
 
-                <span class="icono_editar"><a href="index.php?accion=editarTarea&id=<?=$tarea->getId()?>"><i class="fa-solid fa-pen-to-square color_gris"></i></a></span>
+                <span class="icono_editar"><a href="index.php?accion=irAEditarTarea&idTarea=<?=$tarea->getId()?>"><i class="fa-solid fa-pen-to-square color_gris"></i></a></span>
             <div id="fotos">
                 <?php foreach($fotos as $foto): ?>
                     <img src="web/images/<?=$foto->getNombreArchivo()?>" style="height: 100px; border: 1px solid black;">                

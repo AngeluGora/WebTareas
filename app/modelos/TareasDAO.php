@@ -71,11 +71,11 @@ class TareasDAO {
         $query = "SELECT * FROM tareas WHERE id = $id";
         $resultado = $this->conexion->query($query);
 
-        if ($resultado->num_rows > 0) {
+        if($resultado->num_rows == 1){
             $tarea = $resultado->fetch_object(Tarea::class);
-            
-            return $tarea->toArray();
-        } else {
+            return $tarea;
+        }
+        else{
             return null;
         }
     }

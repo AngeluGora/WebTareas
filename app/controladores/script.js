@@ -24,9 +24,12 @@ botonInsertar.addEventListener('click', function () {
         var papelera = document.createElement('i');
         var enlaceEditar = document.createElement('a'); // Crear un elemento 'a' para el enlace de edición
         var iconoEditar = document.createElement('i'); // Crear un elemento 'i' para el ícono de edición
+        var tick = document.createElement('i');
         capaTarea.classList.add('tarea');
         capaTexto.classList.add('texto');
         capaTexto.innerHTML = tarea.texto;
+        tick.classList.add('fa-regular', 'fa-circle-check', 'iconoCheckOff');
+        tick.setAttribute("data-idTarea", tarea.id);
         papelera.classList.add('fa-solid', 'fa-trash', 'papelera');
         papelera.setAttribute("data-idTarea", tarea.id);
         enlaceEditar.setAttribute('href', 'index.php?accion=irAEditarTarea&idTarea=' + tarea.id); // Establecer el atributo 'href' del enlace
@@ -35,18 +38,62 @@ botonInsertar.addEventListener('click', function () {
         iconoEditar.setAttribute('data-idTarea', tarea.id);
         enlaceEditar.appendChild(iconoEditar); // Agregar el ícono de edición al enlace
         capaTarea.appendChild(capaTexto);
+        capaTarea.appendChild(tick);
         capaTarea.appendChild(papelera);
         capaTarea.appendChild(enlaceEditar); // Agregar el enlace de edición al DOM
         document.getElementById('tareas').appendChild(capaTarea);
     
         //Añadir manejador de evento Borrar a la nueva papelera
         papelera.addEventListener('click', manejadorBorrar);
+        tick.addEventListener( 'click', ponerTick);
     })
     .finally(function(){
     });
     
 });
 
+
+let tickOn = document.querySelectorAll('.iconoCheckOn');
+tickOn.forEach(tickOn =>{
+    tickOn.addEventListener('click',quitarTick);
+});
+
+let tickOff = document.querySelectorAll('.iconoCheckOff');
+tickOff.forEach(tickOff =>{
+    tickOff.addEventListener('click',ponerTick);
+});
+
+function ponerTick(){
+        let idTarea = this.getAttribute('data-idTarea');
+        fetch('index.php?accion=marcarComoCompletada&id='+idTarea)
+        .then(datos => datos.json())
+        .then(respuesta =>{
+            console.log(respuesta);
+            this.classList.remove("iconoCheckOff");
+            this.classList.remove("fa-regular");
+            this.classList.add("iconoCheckOn");
+            this.classList.add("fa-solid");
+            this.removeEventListener('click',ponerTick);
+            this.addEventListener('click',quitarTick);
+        })
+        
+    }
+
+    function quitarTick(){
+        let idTarea = this.getAttribute('data-idTarea');
+        fetch('index.php?accion=desmarcarComoCompletada&id='+idTarea)
+        .then(datos => datos.json())
+        .then(respuesta =>{
+            console.log(respuesta);
+            this.classList.remove("iconoTickOn");
+            this.classList.remove("fa-solid");
+            this.classList.add("iconoTickOff");
+            this.classList.add("fa-regular");
+            this.removeEventListener('click',quitarTick);
+            this.addEventListener('click',ponerTick);
+        })
+        
+}
 
 let papeleras = document.querySelectorAll('.papelera');
 papeleras.forEach(papelera => {

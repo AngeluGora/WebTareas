@@ -7,22 +7,17 @@ class TickDAO {
         $this->conn = $conn;
     }
 
-    public function insert($tick) {
+    public function insert($idUsuario, $idTarea) {
         // No debería haber un punto y coma después de la condición if
-        if ($this->existByIdUsuarioIdTarea($tick->getIdUsuario(), $tick->getIdTarea())) {
+        if ($this->existByIdUsuarioIdTarea($idUsuario, $idTarea)) {
             return false;  // O puedes lanzar una excepción o manejar de alguna otra manera
         }
-
         if (!$stmt = $this->conn->prepare("INSERT INTO tick (idUsuario, idTarea) VALUES (?, ?)")) {
             die("Error al preparar la consulta insert: " . $this->conn->error);
         }
-
-        $idTarea = $tick->getIdTarea();
-        $idUsuario = $tick->getIdUsuario();
         $stmt->bind_param('ii', $idUsuario, $idTarea);
         
         if ($stmt->execute()) {
-            $tick->setId($stmt->insert_id);
             return $stmt->insert_id;
         } else {
             return false;

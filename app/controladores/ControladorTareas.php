@@ -46,21 +46,15 @@ class ControladorTareas{
 
         $tareasDAO = new TareasDAO($conn);
 
-        $idTarea = htmlspecialchars($_POST['idTarea']);
-        var_dump($_POST);
-        die;
-        $tarea = $tareasDAO->obtenerTareaPorID($idTarea);
+        $idTarea = htmlentities($_POST['idTarea']);
 
-
-        if(Sesion::getUsuario()->getId()==$tarea->getIdUsuario()){
-            $tareasDAO->borrarTarea($idTarea);
-        }
-        else
-        {
-            guardarTarea("No puedes borrar esta tarea");
+        if($tarea = $tareasDAO->borrarTarea($idTarea)){
+            print json_encode(['respuesta'=>'ok']);
+        }else{
+            print json_encode(['respuesta'=>'error', 'mensaje'=>'Tarea no encontrada']);
         }
 
-        header('location: index.php');
+
     }
 
 

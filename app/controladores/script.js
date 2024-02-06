@@ -81,7 +81,6 @@ function manejadorBorrar() {
     let preloader = self.parentElement.querySelector('img');
     preloader.style.visibility = "visible";
     self.style.visibility = 'hidden';
-
     // Llamada al script del servidor que borra la tarea pasándole el idTarea como parámetro
     fetch('index.php?accion=borrarTarea', options2)
         .then(datos => datos.json())

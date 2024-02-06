@@ -22,15 +22,18 @@
         ?>
         <div class="tarea">
             <?php if(Sesion::getUsuario() && Sesion::getUsuario()->getId() == $tarea->getIdUsuario()): ?>
-                <span class="icono_borrar"><i class="fa-solid fa-trash papelera" data-idTarea="<?= $tarea->getId()?>"></i></a></span>
+            
+                <div class="texto"><?= $tarea->getTexto() ?></div>
+                <i class="fa-solid fa-trash papelera" data-idTarea="<?= $tarea->getId()?>"></i>
+                <img src="preloader.gif" class="preloaderBorrar">
+
                 <span class="icono_editar"><a href="index.php?accion=editarTarea&id=<?=$tarea->getId()?>"><i class="fa-solid fa-pen-to-square color_gris"></i></a></span>
-            <?php endif; ?>
-            <p class="texto"><?= $tarea->getTexto() ?></p>
             <div id="fotos">
                 <?php foreach($fotos as $foto): ?>
                     <img src="web/images/<?=$foto->getNombreArchivo()?>" style="height: 100px; border: 1px solid black;">                
                 <?php endforeach; ?>
             </div>
+            <?php endif; ?>
             <?php if(Sesion::existeSesion()): ?>
                 <?php if($existeTick): ?>
                     <i class="fa-solid fa-heart iconoFavoritoOn" data-idTarea="<?= $tarea->getId()?>"></i>

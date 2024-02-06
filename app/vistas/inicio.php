@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +23,7 @@
         <div class="tarea">
             <?php if(Sesion::getUsuario() && Sesion::getUsuario()->getId() == $tarea->getIdUsuario()): ?>
             
-                <div class="texto"><?= $tarea->getTexto() ?></div>
+                <div class="texto"><p id="texto"><?= $tarea->getTexto() ?></p></div>
                 <div id="fotos">
                     <?php foreach($fotos as $foto): ?>
                         <img src="web/imagenes/<?=$foto->getNombreArchivo()?>" style="height: 100px; border: 1px solid black;">                
@@ -74,6 +74,8 @@ function ponerTick(){
             this.classList.add("fa-solid");
             this.removeEventListener('click',ponerTick);
             this.addEventListener('click',quitarTick);
+            let texto = document.getElementById('texto');
+            texto.style.textDecoration = 'line-through';
         })
         
     }

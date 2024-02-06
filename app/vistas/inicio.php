@@ -45,7 +45,7 @@
 </div>
 
     <input type="text" id="nuevaTarea">
-    <button id="botonNuevaTarea">Enviar</button><img src="preloader.gif" id="preloaderInsertar">
+    <button id="botonNuevaTarea">Enviar</button>
     <script src="app/controladores/script.js" type="text/javascript"></script>
 
 </body>

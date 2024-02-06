@@ -17,7 +17,7 @@
             <script>
                 setTimeout(function() {
                     window.location.href = 'index.php?accion=inicio';
-                }, 3000); // Redirigir después de 3 segundos
+                }, 3000);
             </script>
         <?php else: ?>
             <!-- Formulario de login -->

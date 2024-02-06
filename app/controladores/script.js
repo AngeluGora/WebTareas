@@ -60,7 +60,6 @@ function manejadorBorrar() {
 
     // Obtener el idTarea
     const idTarea = self.getAttribute('data-idTarea');
-
     // Crear FormData y opciones para la solicitud fetch
     const datos2 = new FormData();
     datos2.append('idTarea', idTarea);

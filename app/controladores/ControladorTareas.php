@@ -47,7 +47,11 @@ class ControladorTareas{
         $tareasDAO = new TareasDAO($conn);
 
         $idTarea = htmlentities($_POST['idTarea']);
-
+        $fotosDAO=new FotosDAO($conn);
+        $fotos=$fotosDAO->getAllByIdTarea($idTarea);
+        for ($i=0; $i < count($fotos); $i++) { 
+            $fotosDAO->delete($fotos[$i]);
+        }
         if($tarea = $tareasDAO->borrarTarea($idTarea)){
             print json_encode(['respuesta'=>'ok']);
         }else{

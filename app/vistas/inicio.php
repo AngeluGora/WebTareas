@@ -51,8 +51,7 @@
         ?>
         <div class="tarea">
             <?php if(Sesion::getUsuario() && Sesion::getUsuario()->getId() == $tarea->getIdUsuario()): ?>
-                
-            
+
                 <div class="texto">
                     <?php if ($existeTick): ?>
                         <hr class="linea" data-idTarea="<?= $tarea->getId() ?>">
@@ -102,35 +101,45 @@ tickOff.forEach(tickOff =>{
     tickOff.addEventListener('click',ponerTick);
 });
 
-function ponerTick(){
-        let idTarea = this.getAttribute('data-idTarea');
-        fetch('index.php?accion=marcarComoCompletada&id='+idTarea)
+function ponerTick() {
+    let idTarea = this.getAttribute('data-idTarea');
+    fetch('index.php?accion=marcarComoCompletada&id=' + idTarea)
         .then(datos => datos.json())
-        .then(respuesta =>{
+        .then(respuesta => {
             this.classList.remove("iconoCheckOff");
             this.classList.remove("fa-regular");
             this.classList.add("iconoCheckOn");
             this.classList.add("fa-solid");
-            this.removeEventListener('click',ponerTick);
-            this.addEventListener('click',quitarTick);
-        })
-        
-    }
+            this.removeEventListener('click', ponerTick);
+            this.addEventListener('click', quitarTick);
 
-function quitarTick(){
-        let idTarea = this.getAttribute('data-idTarea');
-        fetch('index.php?accion=desmarcarComoCompletada&id='+idTarea)
+            // Agregar la clase .linea al elemento <hr> correspondiente
+            let hrElement = document.querySelector('.linea[data-idTarea="' + idTarea + '"]');
+            if (hrElement) {
+                hrElement.style.display = "block";
+            }
+        });
+}
+
+function quitarTick() {
+    let idTarea = this.getAttribute('data-idTarea');
+    fetch('index.php?accion=desmarcarComoCompletada&id=' + idTarea)
         .then(datos => datos.json())
-        .then(respuesta =>{
+        .then(respuesta => {
             console.log(respuesta);
             this.classList.remove("iconoTickOn");
             this.classList.remove("fa-solid");
             this.classList.add("iconoTickOff");
             this.classList.add("fa-regular");
-            this.removeEventListener('click',quitarTick);
-            this.addEventListener('click',ponerTick);
-        })
-        
+            this.removeEventListener('click', quitarTick);
+            this.addEventListener('click', ponerTick);
+
+            // Eliminar la clase .linea del elemento <hr> correspondiente
+            let hrElement = document.querySelector('.linea[data-idTarea="' + idTarea + '"]');
+            if (hrElement) {
+                hrElement.style.display = "none";
+            }
+        });
 }
 
 

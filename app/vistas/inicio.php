@@ -6,9 +6,37 @@
     <title>Tareas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="web/css/estilos.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .tituloPagina {
+        margin-right: 10px;
+        }
+        .emailUsuario {
+        margin-right: 10px;
+        }
+        body {
+            background-image: url('web/imagenes/background.png');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
 </head>
 <body>
-<div id="tareas">
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+        <div style="max-width: 100px;">
+            <img src="web/imagenes/logo.png" class="d-inline-block align-top img-fluid" alt="Logo">
+        </div>
+
+        <h1 class="tituloPagina" style="">Tus tareas con TaskOverFlow</h1>
+        <div class="ml-auto"> 
+            <?php if(Sesion::getUsuario()): ?>
+                <span class="emailUsuario"><?= Sesion::getUsuario()->getEmail() ?></span>
+                <a href="index.php?accion=logout" class="btn btn-danger">Cerrar sesión</a> <!-- Utilizando Bootstrap para estilizar el botón -->
+            <?php endif; ?>
+        </div>
+    </nav>
+
+    <div id="tareas">
     <?php foreach ($tareas as $tarea): ?>
         <?php
         $idTarea = $tarea->getId(); 
@@ -23,8 +51,15 @@
         ?>
         <div class="tarea">
             <?php if(Sesion::getUsuario() && Sesion::getUsuario()->getId() == $tarea->getIdUsuario()): ?>
+                
             
-                <div class="texto"><p id="texto"> <?= $tarea->getTexto() ?></p></div>
+                <div class="texto">
+                    <?php if ($existeTick): ?>
+                        <hr class="linea" data-idTarea="<?= $tarea->getId() ?>">
+                    <?php endif; ?>
+                    <p id="texto"><?= $tarea->getTexto() ?></p>
+                    
+                </div>
                 <?php if(Sesion::existeSesion()): ?>
                     <?php if($existeTick): ?>
                         <i class="fa-solid fa-circle-check iconoCheckOn" data-idTarea="<?= $tarea->getId()?>"></i>
@@ -47,9 +82,11 @@
         </div>
     <?php endforeach; ?>
 </div>
-
-    <input type="text" id="nuevaTarea">
-    <button id="botonNuevaTarea">Enviar</button>
+    <div class="contenedor">
+        <input type="text" id="nuevaTarea"  placeholder="Escribe tu tarea..."/>
+        <button id="botonNuevaTarea">Enviar</button>
+    </div>
+    
     <script src="app/controladores/script.js" type="text/javascript"></script>
 
 

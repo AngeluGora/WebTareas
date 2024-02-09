@@ -25,6 +25,8 @@ botonInsertar.addEventListener('click', function () {
         var enlaceEditar = document.createElement('a'); // Crear un elemento 'a' para el enlace de edición
         var iconoEditar = document.createElement('i'); // Crear un elemento 'i' para el ícono de edición
         var tick = document.createElement('i');
+        var hrLinea = document.createElement('hr');
+        
         capaTarea.classList.add('tarea');
         capaTexto.classList.add('texto');
         capaTexto.innerHTML = tarea.texto;
@@ -37,19 +39,25 @@ botonInsertar.addEventListener('click', function () {
         iconoEditar.classList.add('fa-solid', 'fa-pen-to-square', 'color_gris'); // Agregar clases al ícono de edición
         iconoEditar.setAttribute('data-idTarea', tarea.id);
         enlaceEditar.appendChild(iconoEditar); // Agregar el ícono de edición al enlace
+        
+            hrLinea.classList.add('linea2','oculto');
+            hrLinea.setAttribute('data-idTarea', tarea.id);
+        
+        
         capaTarea.appendChild(capaTexto);
         capaTarea.appendChild(tick);
         capaTarea.appendChild(papelera);
-        capaTarea.appendChild(enlaceEditar); // Agregar el enlace de edición al DOM
+        capaTarea.appendChild(enlaceEditar); 
+        capaTarea.appendChild(hrLinea); 
         document.getElementById('tareas').appendChild(capaTarea);
-    
-        //Añadir manejador de evento Borrar a la nueva papelera
+        
         papelera.addEventListener('click', manejadorBorrar);
-        tick.addEventListener( 'click', ponerTick);
+        tick.addEventListener('click', ponerTick);
+        hrLinea.addEventListener('click', ponerTick);
     })
     .finally(function(){
     });
-    
+
 });
 
 
@@ -63,36 +71,44 @@ tickOff.forEach(tickOff =>{
     tickOff.addEventListener('click',ponerTick);
 });
 
-function ponerTick(){
-        let idTarea = this.getAttribute('data-idTarea');
-        fetch('index.php?accion=marcarComoCompletada&id='+idTarea)
+function ponerTick() {
+    let idTarea = this.getAttribute('data-idTarea');
+    fetch('index.php?accion=marcarComoCompletada&id=' + idTarea)
         .then(datos => datos.json())
-        .then(respuesta =>{
-            console.log(respuesta);
+        .then(respuesta => {
             this.classList.remove("iconoCheckOff");
             this.classList.remove("fa-regular");
             this.classList.add("iconoCheckOn");
             this.classList.add("fa-solid");
-            this.removeEventListener('click',ponerTick);
-            this.addEventListener('click',quitarTick);
-        })
-        
-    }
+            this.removeEventListener('click', ponerTick);
+            this.addEventListener('click', quitarTick);
 
-    function quitarTick(){
-        let idTarea = this.getAttribute('data-idTarea');
-        fetch('index.php?accion=desmarcarComoCompletada&id='+idTarea)
+            let hrElement = document.querySelector('hr[data-idTarea="'+idTarea+'"]');
+            if (hrElement) {
+                hrElement.classList.remove('oculto');
+            }
+            
+        });
+}
+
+function quitarTick() {
+    let idTarea = this.getAttribute('data-idTarea');
+    fetch('index.php?accion=desmarcarComoCompletada&id=' + idTarea)
         .then(datos => datos.json())
-        .then(respuesta =>{
+        .then(respuesta => {
             console.log(respuesta);
             this.classList.remove("iconoTickOn");
             this.classList.remove("fa-solid");
             this.classList.add("iconoTickOff");
             this.classList.add("fa-regular");
-            this.removeEventListener('click',quitarTick);
-            this.addEventListener('click',ponerTick);
-        })
-        
+            this.removeEventListener('click', quitarTick);
+            this.addEventListener('click', ponerTick);
+
+            let hrElement = document.querySelector('hr[data-idTarea="'+idTarea+'"]');
+            if (hrElement) {
+                hrElement.classList.add('oculto');
+            }
+        });
 }
 
 let papeleras = document.querySelectorAll('.papelera');

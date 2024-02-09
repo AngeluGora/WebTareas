@@ -1,19 +1,27 @@
-/* Estilos para la línea */
-.linea {
-    width: 90%; /* Cambiado a 100% */
+
+#linea {
+    width: 90%; 
     position: absolute;
-    height: 2px; /* Ajusta el grosor de la línea según necesites */
+    height: 2px;
     top: 11px;
     background-color: black;
-    z-index: 1; /* Asegura que la línea esté por encima del párrafo */
+    z-index: 1; 
 }
-
-/* Estilos para el párrafo */
+.linea2{
+    width: 90%; 
+    position: absolute;
+    height: 2px;
+    top: 11px;
+    background-color: black;
+    z-index: 1; 
+}
+.oculto{
+    display: none;
+}
 #texto {
-    position: relative; /* Establece el contexto de apilamiento para la línea */
+    position: relative; 
 }
 
-/* Estilos adicionales para el contenedor de tarea */
 .tarea {
     border: 1px solid gray;
     padding: 10px;

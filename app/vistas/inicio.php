@@ -31,7 +31,7 @@
         <div class="ml-auto"> 
             <?php if(Sesion::getUsuario()): ?>
                 <span class="emailUsuario"><?= Sesion::getUsuario()->getEmail() ?></span>
-                <a href="index.php?accion=logout" class="btn btn-danger">Cerrar sesión</a> <!-- Utilizando Bootstrap para estilizar el botón -->
+                <a href="index.php?accion=logout" class="btn btn-danger">Cerrar sesión</a> 
             <?php endif; ?>
         </div>
     </nav>
@@ -51,13 +51,14 @@
         ?>
         <div class="tarea">
             <?php if(Sesion::getUsuario() && Sesion::getUsuario()->getId() == $tarea->getIdUsuario()): ?>
-
+                
                 <div class="texto">
-                    <?php if ($existeTick): ?>
-                        <hr class="linea" data-idTarea="<?= $tarea->getId() ?>">
-                    <?php endif; ?>
+                <?php if ($existeTick): ?>
+                    <hr id="linea" data-idTarea="<?= $tarea->getId() ?>">
+                <?php else: ?>
+                    <hr id="linea" class="oculto" data-idTarea="<?= $tarea->getId() ?>">
+                <?php endif; ?>
                     <p id="texto"><?= $tarea->getTexto() ?></p>
-                    
                 </div>
                 <?php if(Sesion::existeSesion()): ?>
                     <?php if($existeTick): ?>
@@ -69,10 +70,14 @@
 
                 <?php endif; ?>
                 <div id="fotos">
-                    <?php foreach($fotos as $foto): ?>
-                        <img src="web/imagenes/<?=$foto->getNombreArchivo()?>" style="height: 100px; border: 1px solid black;">                
-                    <?php endforeach; ?>
-                </div>
+                    <div id="fotos2">
+                        <?php if($fotos!=false){ foreach($fotos as $foto): ?>
+                            <img src="web/imagenes/<?=$foto->getNombreArchivo()?>" style="height: 100px; border: 1px solid black";>                
+                        <?php endforeach; }?>
+                    </div>
+                    <div id="addImage">+</div>
+                    <input type="file" style="display: none;" id="inputFileImage">
+        </div>
                 
                 <i class="fa-solid fa-trash papelera" data-idTarea="<?= $tarea->getId()?>"></i>
                 <span class="icono_editar"><a href="index.php?accion=irAEditarTarea&idTarea=<?=$tarea->getId()?>"><i class="fa-solid fa-pen-to-square color_gris"></i></a></span>
@@ -90,14 +95,36 @@
 
 
 <script>
+    let idTarea = this.getAttribute('data-idTarea');
+        let botonAddImage = document.getElementById('addImage');
+        botonAddImage.addEventListener('click',function(){
+            document.getElementById('inputFileImage').click();
+        });
 
-let tickOn = document.querySelectorAll('.iconoCheckOn');
-tickOn.forEach(tickOn =>{
+        let inputFileImage = document.getElementById('inputFileImage');
+        inputFileImage.addEventListener('change',function(){
+            let formData = new FormData();
+            formData.append('foto',inputFileImage.files[0]);
+            fetch('index.php?accion=addImageTarea&idTarea='+idTarea,{
+                method: 'POST',
+                body: formData
+            })
+            .then(datos => datos.json())
+            .then(respuesta => {
+                let nuevaFoto = document.createElement("img");
+                nuevaFoto.classList.add('imagenMensaje');
+                nuevaFoto.setAttribute("src",'web/imagenes/'+respuesta.nombreArchivo);
+                document.getElementById('fotos2').append(nuevaFoto);
+            })
+        });
+
+let ticksOn = document.querySelectorAll('.iconoCheckOn');
+ticksOn.forEach(tickOn =>{
     tickOn.addEventListener('click',quitarTick);
 });
 
-let tickOff = document.querySelectorAll('.iconoCheckOff');
-tickOff.forEach(tickOff =>{
+let ticksOff = document.querySelectorAll('.iconoCheckOff');
+ticksOff.forEach(tickOff =>{
     tickOff.addEventListener('click',ponerTick);
 });
 
@@ -113,11 +140,11 @@ function ponerTick() {
             this.removeEventListener('click', ponerTick);
             this.addEventListener('click', quitarTick);
 
-            // Agregar la clase .linea al elemento <hr> correspondiente
-            let hrElement = document.querySelector('.linea[data-idTarea="' + idTarea + '"]');
+            let hrElement = document.querySelector('hr[data-idTarea="'+idTarea+'"]');
             if (hrElement) {
-                hrElement.style.display = "block";
+                hrElement.classList.remove('oculto');
             }
+            
         });
 }
 
@@ -134,10 +161,9 @@ function quitarTick() {
             this.removeEventListener('click', quitarTick);
             this.addEventListener('click', ponerTick);
 
-            // Eliminar la clase .linea del elemento <hr> correspondiente
-            let hrElement = document.querySelector('.linea[data-idTarea="' + idTarea + '"]');
+            let hrElement = document.querySelector('hr[data-idTarea="'+idTarea+'"]');
             if (hrElement) {
-                hrElement.style.display = "none";
+                hrElement.classList.add('oculto');
             }
         });
 }

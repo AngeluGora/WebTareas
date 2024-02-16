@@ -75,8 +75,6 @@
                             <img src="web/imagenes/<?=$foto->getNombreArchivo()?>" style="height: 100px; border: 1px solid black";>                
                         <?php endforeach; }?>
                     </div>
-                    <div id="addImage">+</div>
-                    <input type="file" style="display: none;" id="inputFileImage">
         </div>
                 
                 <i class="fa-solid fa-trash papelera" data-idTarea="<?= $tarea->getId()?>"></i>
